@@ -1,0 +1,32 @@
+server:
+  port: 8083
+  tomcat:
+    max-threads: 1
+
+# DataSource Config
+spring:
+  datasource:
+    url: jdbc:h2:~/test
+    driver-class-name: org.h2.Driver
+    username: root
+    password: 123456
+  #    schema: classpath:db/schema.sql
+  #    data: classpath:db/data.sql
+  # h2 数据库启动以后 通过 http://localhost:8083/h2-console 在浏览器进行访问
+  jpa:
+    database: h2
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+
+# 日志
+logging:
+  level:
+    com.ls : debug
+#    org:
+#      springframework:
+#        h2 : debug

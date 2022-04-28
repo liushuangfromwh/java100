@@ -61,6 +61,10 @@ public class UserService2 {
         }
     }
 
+    /**
+     * todo 这里不加事务 会回滚吗?
+     * @param entity
+     */
     private void createMainUser(User entity) {
         userMapper.insert(entity);
         log.info("createMainUser finish");

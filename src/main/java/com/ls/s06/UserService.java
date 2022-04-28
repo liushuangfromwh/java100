@@ -84,7 +84,7 @@ public class UserService {
     @Transactional
     public void createUserPublic(User entity) {
         //逻辑省略
-        //userRepository.save(entity);
+        userMapper.insert(entity);
         if (entity.getName().contains("test")) {
             throw new RuntimeException("invalid username!");
         }
@@ -94,7 +94,7 @@ public class UserService {
     @Transactional
     public void createUserWrong3(String name) {
         try {
-            //userRepository.save(new UserEntity(name));
+            userMapper.insert(new User(name));
             throw new RuntimeException("error");
         } catch (Exception ex) {
             log.error("create user failed", ex);
@@ -112,7 +112,7 @@ public class UserService {
     //@Transactional
     @Transactional(rollbackFor = Exception.class)
     public void createUserWrong4(String name) throws IOException {
-        //userRepository.save(new UserEntity(name));
+        userMapper.insert(new User(name));
         otherTask();
     }
 
@@ -125,7 +125,7 @@ public class UserService {
     @Transactional
     public void createUserRight1(String name) {
         try {
-            //userRepository.save(new UserEntity(name));
+            userMapper.insert(new User(name));
             throw new RuntimeException("error");
         } catch (Exception ex) {
             log.error("create user failed", ex);

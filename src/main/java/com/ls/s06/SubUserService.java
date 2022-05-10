@@ -1,6 +1,5 @@
 package com.ls.s06;
 
-import com.ls.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,20 +17,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class SubUserService {
 
     @Autowired
-    private UserMapper userMapper;
+    private UserRepository userRepository;
 
     @Transactional
-    public void createSubUserWithExceptionWrong(User entity) {
+    public void createSubUserWithExceptionWrong(UserEntity entity) {
         log.info("createSubUserWithExceptionWrong start");
-        userMapper.insert(entity);
+        userRepository.save(entity);
         throw new RuntimeException("invalid status");
     }
 
     //也就是执行到这个方法时需要开启新的事务，并挂起当前事务：
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void createSubUserWithExceptionRight1(User entity) {
+    public void createSubUserWithExceptionRight1(UserEntity entity) {
         log.info("createSubUserWithExceptionWrong start");
-        userMapper.insert(entity);
+        userRepository.save(entity);
         throw new RuntimeException("invalid status");
     }
 }

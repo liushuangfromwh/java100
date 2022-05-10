@@ -33,7 +33,7 @@ public class UserServiceController {
     @GetMapping("right")
     public int right2(@RequestParam("name") String name) {
         try {
-            userService.createUserPublic(new User(name));
+            userService.createUserPublic(new UserEntity(name));
         } catch (Exception ex) {
             log.error("create user failed because {}", ex.getMessage());
         }

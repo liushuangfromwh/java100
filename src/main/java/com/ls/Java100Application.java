@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @MapperScan("com.ls.mapper")
 public class Java100Application {
     public static void main(String[] args) {
-        SpringApplication.run(Java100Application.class);
+        System.setProperty("logging.config", "D:\\it黄埔军校\\java100\\src\\main\\resources\\loggerwrong.xml");
+        SpringApplication.run(Java100Application.class, args);
     }
 }

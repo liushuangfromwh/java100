@@ -1,8 +1,5 @@
 package com.ls.s06;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.ls.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +17,7 @@ import java.util.List;
 public class UserService2 {
 
     @Autowired
-    private UserMapper userMapper;
+    private UserRepository userRepository;
     @Autowired
     private SubUserService subUserService;
 
@@ -29,7 +26,7 @@ public class UserService2 {
      * @param entity
      */
     @Transactional
-    public void createUserWrong1(User entity) {
+    public void createUserWrong1(UserEntity entity) {
         createMainUser(entity);
         subUserService.createSubUserWithExceptionWrong(entity);
     }
@@ -39,7 +36,7 @@ public class UserService2 {
      * @param entity
      */
     @Transactional
-    public void createUserWrong2(User entity) {
+    public void createUserWrong2(UserEntity entity) {
         createMainUser(entity);
         try{
             subUserService.createSubUserWithExceptionWrong(entity);
@@ -51,7 +48,7 @@ public class UserService2 {
     }
 
     @Transactional
-    public void createUserRight1(User entity) {
+    public void createUserRight1(UserEntity entity) {
         createMainUser(entity);
         try{
             subUserService.createSubUserWithExceptionRight1(entity);
@@ -65,15 +62,12 @@ public class UserService2 {
      * todo 这里不加事务 会回滚吗?
      * @param entity
      */
-    private void createMainUser(User entity) {
-        userMapper.insert(entity);
+    private void createMainUser(UserEntity entity) {
+        userRepository.save(entity);
         log.info("createMainUser finish");
     }
 
     public int getUserCount(String name) {
-        LambdaQueryWrapper<User> lambdaQuery = Wrappers.lambdaQuery();
-        lambdaQuery.eq(User::getName,name);
-        List<User> users = userMapper.selectList(lambdaQuery);
-        return users.size();
+        return userRepository.findByName(name).size();
     }
 }

@@ -25,7 +25,7 @@ public class UserService2Controller {
     @GetMapping("wrong1")
     public int wrong1(@RequestParam("name") String name) {
         try {
-            userService2.createUserWrong1(new User(name));
+            userService2.createUserWrong1(new UserEntity(name));
         } catch (Exception ex) {
             log.error("createUserWrong failed, reason:{}", ex.getMessage());
         }
@@ -35,7 +35,7 @@ public class UserService2Controller {
     @GetMapping("wrong2")
     public int wrong2(@RequestParam("name") String name) {
         try {
-            userService2.createUserWrong2(new User(name));
+            userService2.createUserWrong2(new UserEntity(name));
         } catch (Exception ex) {
             log.error("createUserWrong failed, reason:{}", ex.getMessage());
         }
@@ -45,7 +45,7 @@ public class UserService2Controller {
     @GetMapping("right1")
     public int right1(@RequestParam("name") String name) {
         try {
-            userService2.createUserRight1(new User(name));
+            userService2.createUserRight1(new UserEntity(name));
         } catch (Exception ex) {
             log.error("createUserWrong failed, reason:{}", ex.getMessage());
         }

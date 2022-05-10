@@ -1,8 +1,5 @@
 package com.ls.s06;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.ls.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +25,7 @@ public class UserService {
     @Autowired
     private UserService self;
     @Autowired
-    private UserMapper userMapper;
+    private UserRepository userRepository;
 
     /**
      * 一个公共方法供Controller调用，内部调用事务性的私有方法,事务不会生效
@@ -38,7 +35,7 @@ public class UserService {
      */
     public int createUserWrong1(String name) {
         try {
-            this.createUserPrivate1(new User(name));
+            this.createUserPrivate1(new UserEntity(name));
         } catch (Exception ex) {
             log.error("create user failed because {}", ex.getMessage());
         }
@@ -47,9 +44,9 @@ public class UserService {
 
     //标记了@Transactional的private方法
     @Transactional
-    private void createUserPrivate1(User entity) {
+    private void createUserPrivate1(UserEntity entity) {
         //逻辑省略 回滚的时候数据的操作
-        userMapper.insert(entity);
+        userRepository.save(entity);
         if (entity.getName().contains("test")) {
             throw new RuntimeException("invalid username!");
         }
@@ -58,10 +55,7 @@ public class UserService {
 
     //根据用户名查询用户数
     public int getUserCount(String name) {
-        LambdaQueryWrapper<User> lambdaQuery = Wrappers.lambdaQuery();
-        lambdaQuery.eq(User::getName,name);
-        List<User> users = userMapper.selectList(lambdaQuery);
-        return users.size();
+        return userRepository.findByName(name).size();
     }
 
     /**
@@ -71,7 +65,7 @@ public class UserService {
      */
     public int createUserWrong2(String name) {
         try {
-            this.createUserPublic(new User(name));
+            this.createUserPublic(new UserEntity(name));
             //这里可以通过自己注入自己,来保证事务正常生效
             //self.createUserPrivate2(new UserEntity(name));
         } catch (Exception ex) {
@@ -82,9 +76,9 @@ public class UserService {
 
 
     @Transactional
-    public void createUserPublic(User entity) {
+    public void createUserPublic(UserEntity entity) {
         //逻辑省略
-        userMapper.insert(entity);
+        userRepository.save(entity);
         if (entity.getName().contains("test")) {
             throw new RuntimeException("invalid username!");
         }
@@ -94,7 +88,7 @@ public class UserService {
     @Transactional
     public void createUserWrong3(String name) {
         try {
-            userMapper.insert(new User(name));
+            userRepository.save(new UserEntity(name));
             throw new RuntimeException("error");
         } catch (Exception ex) {
             log.error("create user failed", ex);
@@ -112,7 +106,7 @@ public class UserService {
     //@Transactional
     @Transactional(rollbackFor = Exception.class)
     public void createUserWrong4(String name) throws IOException {
-        userMapper.insert(new User(name));
+        userRepository.save(new UserEntity(name));
         otherTask();
     }
 
@@ -125,7 +119,7 @@ public class UserService {
     @Transactional
     public void createUserRight1(String name) {
         try {
-            userMapper.insert(new User(name));
+            userRepository.save(new UserEntity(name));
             throw new RuntimeException("error");
         } catch (Exception ex) {
             log.error("create user failed", ex);
